@@ -1,0 +1,492 @@
+- id: '1735419747422'
+  alias: Kritik ve Güvenli pH Seviyesi Uyarısı
+  description: 'pH seviyesi güvenli aralıkta veya dışında ise mesaj gönderir.'
+  trigger:
+    # Kritik pH seviyesi kontrolü
+    - platform: template
+      value_template: >
+        {% set ph_value = states('sensor.pico_w_havuz_1_ph_sensoru') | float %}
+        {% set ph_upper = states('sensor.ph_red_limit') | float(999) %}
+        {% set ph_lower = states('sensor.ph_green_limit') | float(-999) %}
+        {{ ph_value > ph_upper or ph_value < ph_lower }}
+
+    # Güvenli pH seviyesi kontrolü
+    - platform: template
+      value_template: >
+        {% set ph_value = states('sensor.pico_w_havuz_1_ph_sensoru') | float %}
+        {% set ph_upper = states('sensor.ph_red_limit') | float(999) %}
+        {% set ph_lower = states('sensor.ph_green_limit') | float(-999) %}
+        {{ ph_lower <= ph_value <= ph_upper }}
+  action:
+    - choose:
+        # Kritik durum için
+        - conditions:
+            - condition: template
+              value_template: >
+                {% set ph_value = states('sensor.pico_w_havuz_1_ph_sensoru') | float %}
+                {% set ph_upper = states('sensor.ph_red_limit') | float(999) %}
+                {% set ph_lower = states('sensor.ph_green_limit') | float(-999) %}
+                {{ ph_value > ph_upper or ph_value < ph_lower }}
+          sequence:
+            - service: persistent_notification.create
+              data:
+                title: "Kritik pH Seviyesi!"
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ❌ Kritik pH Seviyesi!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_ph_sensoru') }}
+                  🔄 Güvenli Aralık: {{ states('sensor.ph_green_limit') }} - {{ states('sensor.ph_red_limit') }}.
+            - service: telegram_bot.send_message
+              data:
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ❌ Kritik pH Seviyesi!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_ph_sensoru') }}
+                  🔄 Güvenli Aralık: {{ states('sensor.ph_green_limit') }} - {{ states('sensor.ph_red_limit') }}.
+        # Güvenli durum için
+        - conditions:
+            - condition: template
+              value_template: >
+                {% set ph_value = states('sensor.pico_w_havuz_1_ph_sensoru') | float %}
+                {% set ph_upper = states('sensor.ph_red_limit') | float(999) %}
+                {% set ph_lower = states('sensor.ph_green_limit') | float(-999) %}
+                {{ ph_lower <= ph_value <= ph_upper }}
+          sequence:
+            - service: persistent_notification.create
+              data:
+                title: "pH Seviyesi Güvenli!"
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ✅ pH Seviyesi Güvenli!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_ph_sensoru') }}
+                  🔄 Güvenli Aralık: {{ states('sensor.ph_green_limit') }} - {{ states('sensor.ph_red_limit') }}.
+            - service: telegram_bot.send_message
+              data:
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ✅ pH Seviyesi Güvenli!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_ph_sensoru') }}
+                  🔄 Güvenli Aralık: {{ states('sensor.ph_green_limit') }} - {{ states('sensor.ph_red_limit') }}.
+  mode: single
+
+
+
+
+
+
+
+
+
+
+- id: '1735419768198'
+  alias: Kritik ve Güvenli Bulanıklık Seviyesi Uyarısı
+  description: 'Bulanıklık seviyesi güvenli aralıkta veya dışında ise mesaj gönderir.'
+  trigger:
+    # Kritik bulanıklık seviyesi kontrolü
+    - platform: template
+      value_template: >
+        {% set turbidity_value = states('sensor.pico_w_havuz_1_bulaniklik_sensoru') | float %}
+        {% set turbidity_upper = states('sensor.bulaniklik_red_limit') | float(999) %}
+        {% set turbidity_lower = states('sensor.bulaniklik_green_limit') | float(-999) %}
+        {{ turbidity_value > turbidity_upper or turbidity_value < turbidity_lower }}
+
+    # Güvenli bulanıklık seviyesi kontrolü
+    - platform: template
+      value_template: >
+        {% set turbidity_value = states('sensor.pico_w_havuz_1_bulaniklik_sensoru') | float %}
+        {% set turbidity_upper = states('sensor.bulaniklik_red_limit') | float(999) %}
+        {% set turbidity_lower = states('sensor.bulaniklik_green_limit') | float(-999) %}
+        {{ turbidity_lower <= turbidity_value <= turbidity_upper }}
+  action:
+    - choose:
+        # Kritik durum için
+        - conditions:
+            - condition: template
+              value_template: >
+                {% set turbidity_value = states('sensor.pico_w_havuz_1_bulaniklik_sensoru') | float %}
+                {% set turbidity_upper = states('sensor.bulaniklik_red_limit') | float(999) %}
+                {% set turbidity_lower = states('sensor.bulaniklik_green_limit') | float(-999) %}
+                {{ turbidity_value > turbidity_upper or turbidity_value < turbidity_lower }}
+          sequence:
+            - service: persistent_notification.create
+              data:
+                title: "Kritik Bulanıklık Seviyesi!"
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ❌ Kritik Bulanıklık Seviyesi!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_bulaniklik_sensoru') }}
+                  🔄 Güvenli Aralık: {{ states('sensor.bulaniklik_green_limit') }} - {{ states('sensor.bulaniklik_red_limit') }}.
+            - service: telegram_bot.send_message
+              data:
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ❌ Kritik Bulanıklık Seviyesi!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_bulaniklik_sensoru') }}
+                  🔄 Güvenli Aralık: {{ states('sensor.bulaniklik_green_limit') }} - {{ states('sensor.bulaniklik_red_limit') }}.
+        # Güvenli durum için
+        - conditions:
+            - condition: template
+              value_template: >
+                {% set turbidity_value = states('sensor.pico_w_havuz_1_bulaniklik_sensoru') | float %}
+                {% set turbidity_upper = states('sensor.bulaniklik_red_limit') | float(999) %}
+                {% set turbidity_lower = states('sensor.bulaniklik_green_limit') | float(-999) %}
+                {{ turbidity_lower <= turbidity_value <= turbidity_upper }}
+          sequence:
+            - service: persistent_notification.create
+              data:
+                title: "Bulanıklık Seviyesi Güvenli!"
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ✅ Bulanıklık Seviyesi Güvenli!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_bulaniklik_sensoru') }}
+                  🔄 Güvenli Aralık: {{ states('sensor.bulaniklik_green_limit') }} - {{ states('sensor.bulaniklik_red_limit') }}.
+            - service: telegram_bot.send_message
+              data:
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ✅ Bulanıklık Seviyesi Güvenli!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_bulaniklik_sensoru') }}
+                  🔄 Güvenli Aralık: {{ states('sensor.bulaniklik_green_limit') }} - {{ states('sensor.bulaniklik_red_limit') }}.
+  mode: single
+
+
+
+
+
+
+
+
+
+- id: '1735419783222'
+  alias: Kritik ve Güvenli Su Sıcaklığı Seviyesi Uyarısı
+  description: 'Su sıcaklığı güvenli aralıkta veya dışında ise mesaj gönderir.'
+  trigger:
+    # Kritik sıcaklık seviyesi kontrolü
+    - platform: template
+      value_template: >
+        {% set temperature_value = states('sensor.pico_w_havuz_1_su_sicakligi_sensoru') | float %}
+        {% set temperature_upper = states('sensor.sicaklik_red_limit') | float(999) %}
+        {% set temperature_lower = states('sensor.sicaklik_green_limit') | float(-999) %}
+        {{ temperature_value > temperature_upper or temperature_value < temperature_lower }}
+
+    # Güvenli sıcaklık seviyesi kontrolü
+    - platform: template
+      value_template: >
+        {% set temperature_value = states('sensor.pico_w_havuz_1_su_sicakligi_sensoru') | float %}
+        {% set temperature_upper = states('sensor.sicaklik_red_limit') | float(999) %}
+        {% set temperature_lower = states('sensor.sicaklik_green_limit') | float(-999) %}
+        {{ temperature_lower <= temperature_value <= temperature_upper }}
+  action:
+    - choose:
+        # Kritik durum için
+        - conditions:
+            - condition: template
+              value_template: >
+                {% set temperature_value = states('sensor.pico_w_havuz_1_su_sicakligi_sensoru') | float %}
+                {% set temperature_upper = states('sensor.sicaklik_red_limit') | float(999) %}
+                {% set temperature_lower = states('sensor.sicaklik_green_limit') | float(-999) %}
+                {{ temperature_value > temperature_upper or temperature_value < temperature_lower }}
+          sequence:
+            - service: persistent_notification.create
+              data:
+                title: "Kritik Su Sıcaklığı Seviyesi!"
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ❌ Kritik Su Sıcaklığı!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_su_sicakligi_sensoru') }}°C
+                  🔄 Güvenli Aralık: {{ states('sensor.sicaklik_green_limit') }}°C - {{ states('sensor.sicaklik_red_limit') }}°C.
+            - service: telegram_bot.send_message
+              data:
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ❌ Kritik Su Sıcaklığı!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_su_sicakligi_sensoru') }}°C
+                  🔄 Güvenli Aralık: {{ states('sensor.sicaklik_green_limit') }}°C - {{ states('sensor.sicaklik_red_limit') }}°C.
+        # Güvenli durum için
+        - conditions:
+            - condition: template
+              value_template: >
+                {% set temperature_value = states('sensor.pico_w_havuz_1_su_sicakligi_sensoru') | float %}
+                {% set temperature_upper = states('sensor.sicaklik_red_limit') | float(999) %}
+                {% set temperature_lower = states('sensor.sicaklik_green_limit') | float(-999) %}
+                {{ temperature_lower <= temperature_value <= temperature_upper }}
+          sequence:
+            - service: persistent_notification.create
+              data:
+                title: "Su Sıcaklığı Güvenli!"
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ✅ Su Sıcaklığı Güvenli!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_su_sicakligi_sensoru') }}°C
+                  🔄 Güvenli Aralık: {{ states('sensor.sicaklik_green_limit') }}°C - {{ states('sensor.sicaklik_red_limit') }}°C.
+            - service: telegram_bot.send_message
+              data:
+                message: |
+                  🐟 Balık Türü: {{ states('input_select.fish_type') }}
+                  ✅ Su Sıcaklığı Güvenli!
+                  🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_su_sicakligi_sensoru') }}°C
+                  🔄 Güvenli Aralık: {{ states('sensor.sicaklik_green_limit') }}°C - {{ states('sensor.sicaklik_red_limit') }}°C.
+  mode: single
+
+
+
+
+  
+  
+  
+  
+  
+- id: '1735420955422'
+  alias: Balık Türü Değiştirildi
+  description: 'Balık türü değiştirildiğinde gerekli bayrakları sıfırlar ve sensörleri kontrol eder.'
+  trigger:
+    - platform: state
+      entity_id: input_select.fish_type  # Balık türü değişimi tetikleyici
+  action:
+    # Bayrakları sıfırla
+    - service: input_boolean.turn_off
+      target:
+        entity_id:
+          - input_boolean.ph_notification_sent
+          - input_boolean.bulaniklik_notification_sent
+          - input_boolean.sicaklik_notification_sent
+
+    # Sensör değerlerini yeniden kontrol et
+    - service: homeassistant.update_entity
+      target:
+        entity_id:
+          - sensor.pico_w_havuz_1_ph_sensoru
+          - sensor.pico_w_havuz_1_bulaniklik_sensoru
+          - sensor.pico_w_havuz_1_su_sicakligi_sensoru
+
+    # Kritik ve güvenli durum tetikleyicilerini yeniden çalıştır
+    - delay: "00:00:05"  # Sensör güncellemesi için kısa bir bekleme
+    - service: automation.trigger
+      target:
+        entity_id:
+          - automation.kritik_ph_seviyesi_uyarisi_2
+          - automation.kritik_bulaniklik_seviyesi_uyarisi
+          - automation.kritik_su_sicakligi_seviyesi_uyarisi_3
+  mode: single
+
+
+
+
+
+
+
+- id: 'filtreleme_motoru_otomatik'
+  alias: Bulanıklık Uyarısı - Filtreleme Motoru Çalıştır
+  description: 'Kritik bulanıklık durumunda filtreleme motorunu otomatik çalıştırır ve kullanıcıyı bilgilendirir.'
+  trigger:
+    - platform: template
+      value_template: >
+        {% set turbidity_value = states('sensor.pico_w_havuz_1_bulaniklik_sensoru') | float %}
+        {% set turbidity_upper = states('sensor.bulaniklik_red_limit') | float(999) %}
+        {{ turbidity_value > turbidity_upper }}
+  condition: []
+  action:
+    - service: persistent_notification.create
+      data:
+        title: "Filtreleme Motoru Çalıştırıldı!"
+        message: |
+          🐟 Balık Türü: {{ states('input_select.fish_type') }}
+          ❌ Kritik Bulanıklık Seviyesi!
+          🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_bulaniklik_sensoru') }}
+          🔄 Güvenli Aralık: 0.00 - {{ states('sensor.bulaniklik_red_limit') }}
+          ⚙️ Filtreleme Motoru 5 dakika boyunca çalışacak.
+    - service: telegram_bot.send_message
+      data:
+        message: |
+          🐟 Balık Türü: {{ states('input_select.fish_type') }}
+          ❌ Kritik Bulanıklık Seviyesi!
+          🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_bulaniklik_sensoru') }}
+          🔄 Güvenli Aralık: 0.00 - {{ states('sensor.bulaniklik_red_limit') }}
+          ⚙️ Filtreleme Motoru 5 dakika boyunca çalışacak.
+    - service: switch.turn_on
+      target:
+        entity_id: switch.pico_w_havuz_1_filtreleme_motoru
+    - delay: "00:05:00"  # 5 dakika boyunca motor çalışsın
+    - service: switch.turn_off
+      target:
+        entity_id: switch.pico_w_havuz_1_filtreleme_motoru
+    - service: persistent_notification.create
+      data:
+        title: "Filtreleme Motoru Durduruldu!"
+        message: |
+          🐟 Balık Türü: {{ states('input_select.fish_type') }}
+          ✅ Filtreleme işlemi tamamlandı.
+          🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_bulaniklik_sensoru') }}
+          🔄 Güvenli Aralık: 0.00 - {{ states('sensor.bulaniklik_red_limit') }}
+    - service: telegram_bot.send_message
+      data:
+        message: |
+          🐟 Balık Türü: {{ states('input_select.fish_type') }}
+          ✅ Filtreleme işlemi tamamlandı.
+          🌡️ Mevcut Değer: {{ states('sensor.pico_w_havuz_1_bulaniklik_sensoru') }}
+          🔄 Güvenli Aralık: 0.00 - {{ states('sensor.bulaniklik_red_limit') }}
+  mode: single
+
+
+
+
+
+- id: 'beslenme_plani_uygulama'
+  alias: Beslenme Planı Otomasyonu
+  description: 'Seçilen balık türüne göre yemleme motorunu çalıştırır.'
+  trigger:
+    # Beslenme saatlerine göre tetikleme
+    - platform: template
+      value_template: >
+        {% set feeding_schedule = {
+          "katla": ["06:30:00", "12:30:00", "17:30:00"],
+          "koi": ["09:00:00", "14:00:00", "18:00:00"],
+          "pangas": ["08:00:00", "13:00:00", "18:00:00"],
+          "prawn": ["07:00:00", "12:00:00", "20:00:00"],
+          "rui": ["07:30:00", "13:00:00", "19:00:00"],
+          "shrimp": ["07:00:00", "12:00:00", "20:00:00"],
+          "silverCup": ["06:00:00", "12:00:00", "18:00:00"],
+          "sing": ["08:30:00", "13:30:00", "19:30:00"],
+          "tilapia": ["08:00:00", "12:00:00", "17:00:00"]
+        } %}
+        {% set fish_type = states('input_select.fish_type') %}
+        {% set current_time = now().strftime('%H:%M:%S') %}
+        {{ fish_type in feeding_schedule and current_time in feeding_schedule[fish_type] }}
+  condition: []
+  action:
+    # Kullanıcıya bildirim gönder
+    - service: persistent_notification.create
+      data:
+        title: "Yemleme Planı"
+        message: |
+          🐟 Balık Türü: {{ states('input_select.fish_type') }}
+          ✅ Yemleme Motoru Çalıştırıldı!
+          🕒 Saat: {{ now().strftime('%H:%M:%S') }}
+    - service: telegram_bot.send_message
+      data:
+        message: |
+          🐟 Balık Türü: {{ states('input_select.fish_type') }}
+          ✅ Yemleme Motoru Çalıştırıldı!
+          🕒 Saat: {{ now().strftime('%H:%M:%S') }}
+
+    # Yemleme motorunu çalıştır
+    - service: switch.turn_on
+      target:
+        entity_id: switch.pico_w_havuz_1_yemleme_motoru
+    - delay: "00:01:00"  # Motor 30 saniye boyunca çalışsın
+    - service: switch.turn_off
+      target:
+        entity_id: switch.pico_w_havuz_1_yemleme_motoru
+  mode: single
+
+
+
+
+
+
+- id: 'telegram_command_handler'
+  alias: Telegram Komut İşleyici
+  trigger:
+    - platform: event
+      event_type: telegram_command
+  action:
+    - choose:
+        # Motor Kontrolleri
+        - conditions: "{{ trigger.event.data.command == '/tahliye_on' }}"
+          sequence:
+            - service: switch.turn_on
+              target:
+                entity_id: switch.pico_w_havuz_1_su_tahliye_motoru
+            - service: telegram_bot.send_message
+              data:
+                message: "💧 Su Tahliye Motoru Açıldı!"
+        - conditions: "{{ trigger.event.data.command == '/tahliye_off' }}"
+          sequence:
+            - service: switch.turn_off
+              target:
+                entity_id: switch.pico_w_havuz_1_su_tahliye_motoru
+            - service: telegram_bot.send_message
+              data:
+                message: "💧 Su Tahliye Motoru Kapatıldı!"
+        - conditions: "{{ trigger.event.data.command == '/hava_on' }}"
+          sequence:
+            - service: switch.turn_on
+              target:
+                entity_id: switch.pico_w_havuz_1_hava_motoru
+            - service: telegram_bot.send_message
+              data:
+                message: "🌬️ Hava Motoru Açıldı!"
+        - conditions: "{{ trigger.event.data.command == '/hava_off' }}"
+          sequence:
+            - service: switch.turn_off
+              target:
+                entity_id: switch.pico_w_havuz_1_hava_motoru
+            - service: telegram_bot.send_message
+              data:
+                message: "🌬️ Hava Motoru Kapatıldı!"
+        - conditions: "{{ trigger.event.data.command == '/filtreleme_on' }}"
+          sequence:
+            - service: switch.turn_on
+              target:
+                entity_id: switch.pico_w_havuz_1_filtreleme_motoru
+            - service: telegram_bot.send_message
+              data:
+                message: "🔄 Filtreleme Motoru Açıldı!"
+        - conditions: "{{ trigger.event.data.command == '/filtreleme_off' }}"
+          sequence:
+            - service: switch.turn_off
+              target:
+                entity_id: switch.pico_w_havuz_1_filtreleme_motoru
+            - service: telegram_bot.send_message
+              data:
+                message: "🔄 Filtreleme Motoru Kapatıldı!"
+        - conditions: "{{ trigger.event.data.command == '/yemleme_on' }}"
+          sequence:
+            - service: switch.turn_on
+              target:
+                entity_id: switch.pico_w_havuz_1_yemleme_motoru
+            - service: telegram_bot.send_message
+              data:
+                message: "🍴 Yemleme Motoru Açıldı!"
+        - conditions: "{{ trigger.event.data.command == '/yemleme_off' }}"
+          sequence:
+            - service: switch.turn_off
+              target:
+                entity_id: switch.pico_w_havuz_1_yemleme_motoru
+            - service: telegram_bot.send_message
+              data:
+                message: "🍴 Yemleme Motoru Kapatıldı!"
+
+        # Otomasyon Kontrolleri
+        - conditions: "{{ trigger.event.data.command == '/ph_otomasyon_on' }}"
+          sequence:
+            - service: automation.turn_on
+              target:
+                entity_id: automation.kritik_ph_seviyesi_uyarisi_2
+            - service: telegram_bot.send_message
+              data:
+                message: "✅ pH Otomasyonu Açıldı!"
+        - conditions: "{{ trigger.event.data.command == '/ph_otomasyon_off' }}"
+          sequence:
+            - service: automation.turn_off
+              target:
+                entity_id: automation.kritik_ph_seviyesi_uyarisi_2
+            - service: telegram_bot.send_message
+              data:
+                message: "❌ pH Otomasyonu Kapatıldı!"
+        - conditions: "{{ trigger.event.data.command == '/bulaniklik_otomasyon_on' }}"
+          sequence:
+            - service: automation.turn_on
+              target:
+                entity_id: automation.kritik_bulaniklik_seviyesi_uyarisi
+            - service: telegram_bot.send_message
+              data:
+                message: "✅ Bulanıklık Otomasyonu Açıldı!"
+        - conditions: "{{ trigger.event.data.command == '/bulaniklik_otomasyon_off' }}"
+          sequence:
+            - service: automation.turn_off
+              target:
+                entity_id: automation.kritik_bulaniklik_seviyesi_uyarisi
+            - service: telegram_bot.send_message
+              data:
+                message: "❌ Bulanıklık Otomasyonu Kapatıldı!"

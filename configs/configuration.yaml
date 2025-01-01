@@ -1,0 +1,260 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+input_select:
+  fish_type:
+    name: Balik Turu
+    options:
+      - katla
+      - koi
+      - pangas
+      - prawn
+      - rui
+      - shrimp
+      - silverCup
+      - sing
+      - tilapia
+    initial: "katla"
+    icon: mdi:fish
+
+template:
+  - sensor:
+      # pH Limit Sensörleri
+      - name: "pH Green Limit"
+        unique_id: "ph_green_limit_sensor"
+        state: >
+          {% if is_state('input_select.fish_type', 'katla') %}
+            6.61
+          {% elif is_state('input_select.fish_type', 'koi') %}
+            3.60
+          {% elif is_state('input_select.fish_type', 'pangas') %}
+            8.365
+          {% elif is_state('input_select.fish_type', 'prawn') %}
+            7.65
+          {% elif is_state('input_select.fish_type', 'rui') %}
+            4.95
+          {% elif is_state('input_select.fish_type', 'shrimp') %}
+            6.47
+          {% elif is_state('input_select.fish_type', 'silverCup') %}
+            4.36
+          {% elif is_state('input_select.fish_type', 'sing') %}
+            5.69
+          {% elif is_state('input_select.fish_type', 'tilapia') %}
+            6.90
+          {% endif %}
+
+      - name: "pH Red Limit"
+        unique_id: "ph_red_limit_sensor"
+        state: >
+          {% if is_state('input_select.fish_type', 'katla') %}
+            8.97
+          {% elif is_state('input_select.fish_type', 'koi') %}
+            10.60
+          {% elif is_state('input_select.fish_type', 'pangas') %}
+            9.04
+          {% elif is_state('input_select.fish_type', 'prawn') %}
+            8.05
+          {% elif is_state('input_select.fish_type', 'rui') %}
+            9.03
+          {% elif is_state('input_select.fish_type', 'shrimp') %}
+            7.35
+          {% elif is_state('input_select.fish_type', 'silverCup') %}
+            8.96
+          {% elif is_state('input_select.fish_type', 'sing') %}
+            8.88
+          {% elif is_state('input_select.fish_type', 'tilapia') %}
+            9.26
+          {% endif %}
+
+      # Bulanıklık Limit Sensörleri
+      - name: "Bulanıklık Green Limit"
+        unique_id: "turbidity_green_limit_sensor"
+        state: >
+          {% if is_state('input_select.fish_type', 'katla') %}
+            0.00
+          {% elif is_state('input_select.fish_type', 'koi') %}
+            0.00
+          {% elif is_state('input_select.fish_type', 'pangas') %}
+            0.00
+          {% elif is_state('input_select.fish_type', 'prawn') %}
+            0.00
+          {% elif is_state('input_select.fish_type', 'rui') %}
+            0.00
+          {% elif is_state('input_select.fish_type', 'shrimp') %}
+            0.00
+          {% elif is_state('input_select.fish_type', 'silverCup') %}
+            0.00
+          {% elif is_state('input_select.fish_type', 'sing') %}
+            0.00
+          {% elif is_state('input_select.fish_type', 'tilapia') %}
+            0.00
+          {% endif %}
+
+      - name: "Bulanıklık Red Limit"
+        unique_id: "turbidity_red_limit_sensor"
+        state: >
+          {% if is_state('input_select.fish_type', 'katla') %}
+            3.63
+          {% elif is_state('input_select.fish_type', 'koi') %}
+            4.31
+          {% elif is_state('input_select.fish_type', 'pangas') %}
+            3.51
+          {% elif is_state('input_select.fish_type', 'prawn') %}
+            4.27
+          {% elif is_state('input_select.fish_type', 'rui') %}
+            3.64
+          {% elif is_state('input_select.fish_type', 'shrimp') %}
+            3.63
+          {% elif is_state('input_select.fish_type', 'silverCup') %}
+            3.58
+          {% elif is_state('input_select.fish_type', 'sing') %}
+            3.58
+          {% elif is_state('input_select.fish_type', 'tilapia') %}
+            3.65
+          {% endif %}
+
+      # Sıcaklık Limit Sensörleri
+      - name: "Sıcaklık Green Limit"
+        unique_id: "temperature_green_limit_sensor"
+        state: >
+          {% if is_state('input_select.fish_type', 'katla') %}
+            20.87
+          {% elif is_state('input_select.fish_type', 'koi') %}
+            18.50
+          {% elif is_state('input_select.fish_type', 'pangas') %}
+            17.85
+          {% elif is_state('input_select.fish_type', 'prawn') %}
+            25.00
+          {% elif is_state('input_select.fish_type', 'rui') %}
+            20.91
+          {% elif is_state('input_select.fish_type', 'shrimp') %}
+            21.10
+          {% elif is_state('input_select.fish_type', 'silverCup') %}
+            20.94
+          {% elif is_state('input_select.fish_type', 'sing') %}
+            20.86
+          {% elif is_state('input_select.fish_type', 'tilapia') %}
+            17.02
+          {% endif %}
+
+      - name: "Sıcaklık Red Limit"
+        unique_id: "temperature_red_limit_sensor"
+        state: >
+          {% if is_state('input_select.fish_type', 'katla') %}
+            21.87
+          {% elif is_state('input_select.fish_type', 'koi') %}
+            38.50
+          {% elif is_state('input_select.fish_type', 'pangas') %}
+            18.09
+          {% elif is_state('input_select.fish_type', 'prawn') %}
+            33.00
+          {% elif is_state('input_select.fish_type', 'rui') %}
+            21.15
+          {% elif is_state('input_select.fish_type', 'shrimp') %}
+            21.34
+          {% elif is_state('input_select.fish_type', 'silverCup') %}
+            21.34
+          {% elif is_state('input_select.fish_type', 'sing') %}
+            21.38
+          {% elif is_state('input_select.fish_type', 'tilapia') %}
+            18.48
+          {% endif %}
+
+
+      - name: "Beslenme Planı"
+        unique_id: "feeding_schedule_sensor"
+        state: >
+          {% set feeding_schedule = {
+            "katla": ["06:30:00", "12:30:00", "17:30:00"],
+            "koi": ["09:00:00", "14:00:00", "18:00:00"],
+            "pangas": ["08:00:00", "13:00:00", "18:00:00"],
+            "prawn": ["07:00:00", "12:00:00", "20:00:00"],
+            "rui": ["07:30:00", "13:00:00", "19:00:00"],
+            "shrimp": ["07:00:00", "12:00:00", "20:00:00"],
+            "silverCup": ["06:00:00", "12:00:00", "18:00:00"],
+            "sing": ["08:30:00", "13:30:00", "19:30:00"],
+            "tilapia": ["08:00:00", "12:00:00", "17:00:00"]
+          } %}
+          {% set fish_type = states('input_select.fish_type') %}
+          {% if fish_type in feeding_schedule %}
+            {{ feeding_schedule[fish_type] | join(', ') }}
+          {% else %}
+            "Bir balık türü seçilmedi."
+          {% endif %}
+        icon: mdi:calendar-clock
+
+
+
+          
+lovelace:
+  resources:
+    - url: /local/custom-gauge-card.js
+      type: module
+
+
+
+input_boolean:
+  ph_notification_sent:
+    name: pH Bildirimi Gönderildi
+    initial: false
+  bulaniklik_notification_sent:
+    name: Bulanıklık Bildirimi Gönderildi
+    initial: false
+  sicaklik_notification_sent:
+    name: Sıcaklık Bildirimi Gönderildi
+    initial: false
+
+
+
+telegram_bot:
+  - platform: polling
+    api_key: "API_KEY"
+    allowed_chat_ids:
+      - 1111111111
+
+notify:
+  - name: telegram
+    platform: telegram
+    chat_id: 1111111111
+
+
+telegram:
+  - platform: command
+    command:
+      - '/tahliye_on'
+      - '/tahliye_off'
+      - '/hava_on'
+      - '/hava_off'
+      - '/filtreleme_on'
+      - '/filtreleme_off'
+      - '/yemleme_on'
+      - '/yemleme_off'
+      - '/ph_otomasyon_on'
+      - '/ph_otomasyon_off'
+      - '/bulaniklik_otomasyon_on'
+      - '/bulaniklik_otomasyon_off'
+      - '/filtre_otomasyon_on'
+      - '/filtre_otomasyon_off'
+      - '/sicaklik_otomasyon_on'
+      - '/sicaklik_otomasyon_off'
+      - '/beslenme_otomasyon_on'
+      - '/beslenme_otomasyon_off'
+
+
+
+
+
+
+
+
+
+
